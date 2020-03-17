@@ -14,10 +14,10 @@ from zipfile import ZipFile
 
 import urllib3
 
-from Usage import input_options, usage
 # python -m pip install git+git://github.com/hclproducts/asoc_automation_iast
 from asoc_automation_iast.AsocUtils import *
 from asoc_automation_iast.IastUtils import *
+from asoc_automation_iast.Usage import input_options, usage
 
 key_id = None
 key_secret = None
