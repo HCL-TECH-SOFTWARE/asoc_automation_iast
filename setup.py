@@ -6,5 +6,5 @@ setup(name='asoc_automation_iast',
       url='http://github.com/hclproducts/asoc_automation_iast',
       author='Tali Rabetti',
       author_email='tali.raetti@hcl.com',
-      packages=['asoc-automation-iast'],
+      packages=['asoc_automation_iast'],
       zip_safe=False)
