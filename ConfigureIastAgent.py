@@ -190,47 +190,41 @@ def main():
 
         temp_zip_filename = 'IASTAgent.temp.zip'
 
-        orig_dir = os.getcwd()
-        os.mkdir('temp')
-        os.chdir('temp')
+        with temp_directory('temp'):
+            # download IASTAgent.zip, which holds the secagent.war
+            download_agent(agent_key)
 
-        # download IASTAgent.zip, which holds the secagent.war
-        response = download_agent(agent_key)
+            # extract the downloaded zip file to temp directory
+            print("extracting zip file")
+            with ZipFile(temp_zip_filename) as orig_zip:
+                ZipFile.extractall(orig_zip)
 
-        # extract the downloaded zip file to temp directory
-        print("extracting zip file")
-        with ZipFile(temp_zip_filename) as orig_zip:
-            ZipFile.extractall(orig_zip)
+            # create asoc-config.json file
+            print(f"copying {asoc_config_filename} file to {war_name}")
+            create_asoc_config_file(agent_key)
+            # add the asoc-config.json to the war file
+            command = f"jar -uvf \"{war_name}\" {asoc_config_filename}"
+            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                    shell=True)
+            if result.returncode != 0:
+                print(f'command [{command}] failed')
+                print(result.stdout)
 
-        # create asoc-config.json file
-        print(f"copying {asoc_config_filename} file to {war_name}")
-        create_asoc_config_file(agent_key)
-        # add the asoc-config.json to the war file
-        command = f"jar -uvf \"{war_name}\" {asoc_config_filename}"
-        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                shell=True)
-        if result.returncode != 0:
-            print(f'command [{command}] failed')
-            print(result.stdout)
+            remove_asoc_config_file()
 
-        remove_asoc_config_file()
+            # zip the files again
+            print(f"Zipping {zip_filename}")
+            with ZipFile(zip_filename, 'w') as zipObj:
+                # Iterate over all the files in directory
+                for folderName, subfolders, filenames in os.walk("."):
+                    for filename in filenames:
+                        if not filename.endswith(".zip"):
+                            # create complete filepath of file in directory
+                            file_path = os.path.join(folderName, filename)
+                            # Add file to zip
+                            zipObj.write(file_path)
 
-        # zip the files again
-        print(f"Zipping {zip_filename}")
-        with ZipFile(zip_filename, 'w') as zipObj:
-            # Iterate over all the files in directory
-            for folderName, subfolders, filenames in os.walk("."):
-                for filename in filenames:
-                    if not filename.endswith(".zip"):
-                        # create complete filepath of file in directory
-                        filePath = os.path.join(folderName, filename)
-                        # Add file to zip
-                        zipObj.write(filePath)
-
-        # remove all temp files
-        os.chdir(orig_dir)
-        shutil.copyfile(os.path.join('temp', zip_filename), zip_filename)
-        shutil.rmtree('temp')
+            shutil.copyfile(zip_filename, os.path.join('../', zip_filename))
 
     except IastException as e:
         sys.stderr.write("\nAn error has occurred:")
@@ -259,6 +253,7 @@ def temp_directory(dir_name):
     yield
     os.chdir(orig_dir)
     shutil.rmtree(dir_name)
+
 
 if __name__ == "__main__":
     exit(main())
