@@ -8,15 +8,15 @@
 # and Tivoli are registered trademarks of HCL Technologies in the United States, other countries, or both.
 #######################################################################################################################
 
+import inspect
 import json
 import logging
 import time
-import inspect
 
 import requests
 
-from .RequestApi import post_request, get_request, delete_request, download_request
 from .IastUtils import IastException
+from .RequestApi import post_request, get_request, delete_request, download_request
 
 ASOC_IAST_API = "https://cloud.appscan.com/IAST/"
 ASOC_API = "https://cloud.appscan.com/api/v2"
@@ -26,6 +26,7 @@ zip_filename = 'IASTAgent.zip'
 ####################################################################
 # ASOC - IAST API https://stage.cloud.appscan.com/IAST/swagger/ui/
 ####################################################################
+
 
 # start new execution directly from ASoC IAST interface
 # Swagger: https://cloud.appscan.com/IAST/swagger/ui/index#!/IAST/IAST_StartNewExecution
@@ -224,7 +225,7 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
 #     }
 def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0):
     scan_model = {
-        "ConnLostStopTimer": "", # Timeout in minutes to stop scan after agent connection lost
+        "ConnLostStopTimer": "",  # Timeout in minutes to stop scan after agent connection lost
         "ScanName": scan_name,
         "EnableMailNotification": True,
         "Locale": "en-US",
@@ -305,7 +306,6 @@ def get_scan_info_by_name(scan_name, token, host=ASOC_API):
 def get_scans(token, host=ASOC_API):
     url = host + "/Scans"
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
-    #params = {"$filter": f"Name eq '{scan_name}'", "$select": "Id,Name"}
     params = {"$select": "Id"}
     try:
         response = get_request(url, params=params, headers=headers, timeout=30)

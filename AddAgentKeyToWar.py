@@ -12,7 +12,8 @@ import os
 import subprocess
 import sys
 
-import AppScan.IastUtils
+# python -m pip install git+git://github.com/hclproducts/asoc_automation_iast
+import asoc_automation_iast.IastUtils as IastUtils
 
 
 def print_usage():
@@ -42,24 +43,24 @@ def main():
         exit(1)
 
     # create a user config file
-    with open(AppScan.IastUtils.asoc_config_filename, 'w') as user_config_file:
+    with open(IastUtils.asoc_config_filename, 'w') as user_config_file:
         json.dump({'accessToken': agent_key}, user_config_file)
 
     # allow for path with or without the filename
-    if not path_to_war.endswith(AppScan.IastUtils.war_name):
-        path_to_war += "/" + AppScan.IastUtils.war_name
+    if not path_to_war.endswith(IastUtils.war_name):
+        path_to_war += "/" + IastUtils.war_name
 
     # add the json file to the war
-    command = f"jar -uvf \"{path_to_war}\" {AppScan.IastUtils.asoc_config_filename}"
+    command = f"jar -uvf \"{path_to_war}\" {IastUtils.asoc_config_filename}"
     result = subprocess.run(command, stderr=subprocess.PIPE, shell=True)
     if result.returncode != 0:
         sys.stderr.write(f'Error - command [{command}] failed')
         sys.stderr.write(str(result.stderr))
         exit(1)
-    print(f"Copied {AppScan.IastUtils.asoc_config_filename} to {path_to_war}")
+    print(f"Copied {IastUtils.asoc_config_filename} to {path_to_war}")
 
     # remove the json file
-    os.remove(AppScan.IastUtils.asoc_config_filename)
+    os.remove(IastUtils.asoc_config_filename)
     exit(0)
 
 

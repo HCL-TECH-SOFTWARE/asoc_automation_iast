@@ -7,19 +7,17 @@
 # and Tivoli are registered trademarks of HCL Technologies in the United States, other countries, or both.
 #######################################################################################################################
 import contextlib
-import os
-import shutil
-import subprocess
-from datetime import datetime
 import getopt
-import sys
+import shutil
+from datetime import datetime
 from zipfile import ZipFile
 
 import urllib3
 
-from AppScan.Usage import input_options, usage
-from AppScan.AsocUtils import *
-from AppScan.IastUtils import *
+from Usage import input_options, usage
+# python -m pip install git+git://github.com/hclproducts/asoc_automation_iast
+from asoc_automation_iast.AsocUtils import *
+from asoc_automation_iast.IastUtils import *
 
 key_id = None
 key_secret = None

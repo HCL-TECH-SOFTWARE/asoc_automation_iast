@@ -22,7 +22,7 @@ input_options = {
     "scan_id": (
         "scan id to use. If a scan with such id exists, it will be used, otherwise, will exit with an error. May only "
         "use one of: scan_name, scan_id. "
-        "IMPORTANT NOTE: using an existing scan will careet a new access token, which will invalidate existing "
+        "IMPORTANT NOTE: using an existing scan will create a new access token, which will invalidate existing "
         "agents that are associated with the same scan",
         "optional"),
     "scan_name": (
