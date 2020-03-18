@@ -1,6 +1,10 @@
-# ConfigureIastAgent.py
+# asoc_automation_iast
+This repository includes two python scripts and a python library to facilitate automation of working with AppScan IAST product.
+More details about the product in: TBD
 
-## Description:
+## ConfigureIastAgent.py
+
+### Description:
   Downloads an IAST agent that communicates with ASoC.  
   The IAST agent communicates with ASoC using an agent key, unique to every IAST scan.
   This agent key is automatically embedded inside the downloaded IAST agent. 
@@ -14,7 +18,7 @@
   
   The result is a zip file, with the IAST agent - Secagent.war inside. Information about deploying the agent can be found here: <TBD>
 
-## Usage: 
+### Usage: 
 `ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value]`
 
 ###### id: 
@@ -47,7 +51,7 @@ Asset group to use for generating an application. If not specified, the organiza
 ###### war_path: 
 Path to download the Secagent.war. If not specified, the current directory will be used. (optional)
 
-## Examples:
+### Examples:
 ```ConfigureIastAgent.py --id=abcd --secret=efgh```  
 A new application and a new IAST scan will be generated.
 
@@ -73,7 +77,7 @@ If a scan named my-scan exists, it will be used. Otherwise, a new application wi
 If a scan named my-scan exists, it will be used. Otherwise, a new application named my-scan will be created, associated with app 12345.
 
 
-## asoc-config.json
+### asoc-config.json
 The access token used to communicate with ASoC is saved in the downloaded IAST agent war file in the following format:
 ```json
 {
@@ -81,13 +85,13 @@ The access token used to communicate with ASoC is saved in the downloaded IAST a
 }
 ```
 
-# AddAgentKeyToWar.py
+## AddAgentKeyToWar.py
 
-## Description
+### Description
 The script adds a given ASoC agent key to a given war file.  
 It is useful when creating a scan and choosing to get `key only` in the `Download Options` step, or when generating a new agent key to an existing scan.
 It is not required when downloading an IAST agent using ConfigureIastAgent.py. 
 
 
-## Usage
+### Usage
 `AddAgentKeyToWar.py --war=<path/to/war> --key=access_token`
