@@ -1,6 +1,6 @@
 # asoc_automation_iast
 This repository includes two python scripts and a python library to facilitate automation of working with AppScan IAST product.
-More details about the product in: TBD
+More details about the product in: https://help.hcltechsw.com/appscan/Standard/10.0.0/en-US/appseccloud_scanning_IAST_main.html
 
 ## ConfigureIastAgent.py
 
@@ -16,7 +16,7 @@ More details about the product in: TBD
   * Create a new scan for the IAST agent, associated to an existing application.
   * Create a new application and a new scan for the IAST agent.
   
-  The result is a zip file, with the IAST agent - Secagent.war inside. Information about deploying the agent can be found here: <TBD>
+  The result is `IASTAgent.zip` file, with the IAST agent deployment file `Secagent.war` inside. Information about deploying the agent can be found here: https://help.hcltechsw.com/appscan/Standard/10.0.0/en-US/IAST_Deploy.html
 
 ### Usage: 
 `ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value]`
