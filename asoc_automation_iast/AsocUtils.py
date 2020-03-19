@@ -197,7 +197,7 @@ def get_app_id_by_name(app_name, token, host=ASOC_API):
 
 
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_DeleteApp
-# request URL : DELETE https://cloud.appscan.com/api/V2/Apps
+# request URL : DELETE https://cloud.appscan.com/api/V2/Apps/<app_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<appId>"
 def delete_app(app_id, token, host=ASOC_API, retries=0):
@@ -321,7 +321,7 @@ def get_scans(token, host=ASOC_API):
 
 
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_DeleteScan
-# request URL : DELETE https://cloud.appscan.com/api/V2/Scans
+# request URL : DELETE https://cloud.appscan.com/api/V2/Scans/<scan_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>, deleteIssues=True"
 def delete_scan(scan_id, token, host=ASOC_API, retries=0):
@@ -336,7 +336,7 @@ def delete_scan(scan_id, token, host=ASOC_API, retries=0):
 
 
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_GenerateNewIastKey
-# request URL : POST https://cloud.appscan.com/api/V2/Scans/NewIASTKey
+# request URL : POST https://cloud.appscan.com/api/V2/Scans/NewIASTKey/<scan_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>"
 def get_new_iast_key_for_scan(scan_id, token, host=ASOC_API):
@@ -416,7 +416,7 @@ def create_report(scan_id, token, host=ASOC_API):
 
 # returns the status of report preparation
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Reports/Reports_GetReportJobs
-# request URL : GET https://cloud.appscan.com/api/V2/Reports/<id>
+# request URL : GET https://cloud.appscan.com/api/V2/Reports/<report_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<reportId>"
 def get_report_status(report_id, token, host=ASOC_API):
@@ -452,7 +452,7 @@ def wait_for_report_ready(report_id, token, max_retries=100, host=ASOC_API):
 
 # returns the status of report preparation
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Reports/Reports_DownloadReport
-# request URL : GET https://cloud.appscan.com/api/V2/Reports/Download/<id>
+# request URL : GET https://cloud.appscan.com/api/V2/Reports/Download/<report_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<reportId>"
 def download_report(report_id, token, host=ASOC_API):
