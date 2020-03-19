@@ -424,7 +424,7 @@ def get_report_status(report_id, token, host=ASOC_API):
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
     json_response = None
     try:
-        response = get_request(url, headers=headers, timeout=30)
+        response = get_request(url, headers=headers, timeout=60)
         json_response = json.loads(response.text)
         print(json_response)
         report_status = json_response["Status"]
