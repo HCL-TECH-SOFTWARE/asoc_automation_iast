@@ -203,7 +203,7 @@ def main():
             print(f"copying {asoc_config_filename} file to {war_name}")
             create_asoc_config_file(agent_key)
             # add the asoc-config.json to the war file
-            command = f"jar -uvf \"{war_name}\" {asoc_config_filename}"
+            command = f"jar -uvf \"{war_name}\" \"{asoc_config_filename}\""
             result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                     shell=True)
             if result.returncode != 0:

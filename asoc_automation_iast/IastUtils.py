@@ -32,7 +32,7 @@ def read_existing_user_config(path_to_existing_file):
 
 
 def add_user_config_to_war(path_to_war):
-    command = f"jar -uvf \"{path_to_war}\" {asoc_config_filename}"
+    command = f"jar -uvf \"{path_to_war}\" \"{asoc_config_filename}\""
     result = subprocess.run(command, stderr=subprocess.PIPE, shell=True)
     if result.returncode != 0:
         print(f'Error - command [{command}] failed')

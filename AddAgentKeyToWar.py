@@ -51,7 +51,7 @@ def main():
         path_to_war += "/" + IastUtils.war_name
 
     # add the json file to the war
-    command = f"jar -uvf \"{path_to_war}\" {IastUtils.asoc_config_filename}"
+    command = f'jar -uvf "{path_to_war}" "{IastUtils.asoc_config_filename}"'
     result = subprocess.run(command, stderr=subprocess.PIPE, shell=True)
     if result.returncode != 0:
         sys.stderr.write(f'Error - command [{command}] failed')
