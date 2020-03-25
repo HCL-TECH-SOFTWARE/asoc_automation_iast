@@ -1,6 +1,6 @@
 # asoc_automation_iast
 This repository includes two python scripts and a python library to facilitate automation of working with AppScan IAST product.
-More details about the product in: https://help.hcltechsw.com/appscan/Standard/10.0.0/en-US/appseccloud_scanning_IAST_main.html
+Find out more about the [AppScan IAST solution](https://s3.amazonaws.com/help.hcltechsw.com/appscan/ASoC/appseccloud_scanning_IAST_main.html).
 
 ## ConfigureIastAgent.py
 
