@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 
-# python -m pip install git+git://github.com/hclproducts/asoc_automation_iast
+# python -m pip install --upgrade git+git://github.com/hclproducts/asoc_automation_iast
 import asoc_automation_iast.IastUtils as IastUtils
 
 

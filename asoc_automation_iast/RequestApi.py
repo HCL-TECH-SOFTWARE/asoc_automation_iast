@@ -13,7 +13,7 @@ default_num_of_retries = 80
 retry_wait_time = 5
 
 
-def get_request(url, params=None, headers=None, timeout=5, stream=False, retries=0):
+def get_request(url, params=None, headers=None, timeout=30, stream=False, retries=0):
     if headers is None:
         headers = {}
     if params is None:
@@ -35,14 +35,14 @@ def get_request(url, params=None, headers=None, timeout=5, stream=False, retries
     if error is not None:
         if retries > 0:
             print(error + ". Retrying request.")
-            get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries - 1)
+            get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries-1)
         else:
             raise IastException(error)
     else:
         return response
 
 
-def post_request(url, params=None, headers=None, json_body=None, data=None, files=None, timeout=5, retries=0):
+def post_request(url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
     if headers is None:
         headers = {}
     if params is None:
@@ -76,7 +76,7 @@ def post_request(url, params=None, headers=None, json_body=None, data=None, file
         return response
 
 
-def delete_request(url, params=None, headers=None, timeout=5, retries=0):
+def delete_request(url, params=None, headers=None, timeout=30, retries=0):
     if headers is None:
         headers = {}
     if params is None:
@@ -84,8 +84,7 @@ def delete_request(url, params=None, headers=None, timeout=5, retries=0):
     error = None
     print_url(url, params, 'DELETE')
     try:
-        response = requests.delete(
-            url, verify=False, params=params, headers=headers, timeout=timeout)
+        response = requests.delete(url, verify=False, params=params, headers=headers, timeout=timeout)
         response.raise_for_status()
     except requests.exceptions.Timeout:
         error = f"request to {url} timed out."
@@ -111,7 +110,7 @@ def print_url(url, params, http_method):
 
 
 # spceial method to download zip file, as in this case the response can't be returned
-def download_request(url, params=None, headers=None, timeout=5, stream=False, retries=0):
+def download_request(url, params=None, headers=None, timeout=30, stream=False, retries=0):
     if headers is None:
         headers = {}
     if params is None:
@@ -134,7 +133,7 @@ def download_request(url, params=None, headers=None, timeout=5, stream=False, re
     if error is not None:
         if retries > 0:
             print(error + ". Retrying request.")
-            get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries - 1)
+            get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries-1)
         else:
             raise IastException(error)
     else:
