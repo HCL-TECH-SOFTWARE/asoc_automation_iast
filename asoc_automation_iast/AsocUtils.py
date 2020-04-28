@@ -320,6 +320,26 @@ def get_scans(token, host=ASOC_API):
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
 
 
+# Swagger: https://https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_ScansById
+# request URL : GET https://https://cloud.appscan.com/api/v2/Apps/<app_id>/Scans
+#     headers: "Authorization=Bearer <token>"
+#     params: "$select=<Id>"
+def get_scans_for_app(token, app_id, host=ASOC_API):
+    url = host + "/Apps/" + app_id + "/Scans"
+    headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
+    params = {"$select": "Id"}
+    try:
+        response = get_request(url, params=params, headers=headers, timeout=30)
+        json_response = json.loads(response.text)
+        return json_response
+    except IastException as e:
+        if 'Client Error: 400' in str(e):
+            return None
+        else:
+            raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
+    except KeyError as e:
+        raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
+
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_DeleteScan
 # request URL : DELETE https://cloud.appscan.com/api/V2/Scans/<scan_id>
 #     headers: "Authorization=Bearer <token>"
