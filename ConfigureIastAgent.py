@@ -72,17 +72,18 @@ def get_user_args():
 
 
 def get_new_iast_key(token):
-    new_token = input(
-        "WARNING! Tou are asking to use an existing ASoC scan. A new access token will be generated and invalidate "
+    #new_token = input(
+    print(
+        "WARNING! You are asking to use an existing ASoC scan. A new access token will be generated and invalidate "
         "previous token. If you have running agents that use the previous token, they will not be able to communicate "
-        "with ASoC anymore. Continue? Y/N")
-    print("answer is", new_token)
-    if new_token.lower() == 'y':
-        agent_key = get_new_iast_key_for_scan(scan_id, token)
-        return agent_key
-    else:
-        print("Exiting.")
-        sys.exit(0)
+        "with ASoC anymore. ")#Continue? Y/N")
+    #print("answer is", new_token)
+#    if new_token.lower() == 'y':
+    agent_key = get_new_iast_key_for_scan(scan_id, token)
+    return agent_key
+    # else:
+    #     print("Exiting.")
+    #     sys.exit(0)
 
 
 def main():
