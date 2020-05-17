@@ -204,7 +204,7 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
     url = host + "/Apps/" + app_id
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
     try:
-        delete_request(url, headers=headers, retries=retries, timeout=30)
+        delete_request(url, headers=headers, retries=retries, timeout=60)
     except IastException as e:
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
@@ -340,6 +340,7 @@ def get_scans_for_app(token, app_id, host=ASOC_API):
     except KeyError as e:
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
 
+
 # Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_DeleteScan
 # request URL : DELETE https://cloud.appscan.com/api/V2/Scans/<scan_id>
 #     headers: "Authorization=Bearer <token>"
@@ -350,7 +351,7 @@ def delete_scan(scan_id, token, host=ASOC_API, retries=0):
         headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
         params = {"deleteIssues": True}
         try:
-            delete_request(url, headers=headers, params=params, retries=retries, timeout=30)
+            delete_request(url, headers=headers, params=params, retries=retries, timeout=60)
         except IastException as e:
             raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
