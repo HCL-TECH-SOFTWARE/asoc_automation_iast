@@ -470,6 +470,7 @@ def wait_for_report_ready(report_id, token, max_retries=100, host=ASOC_API):
         if report_status == 'Failed':
             raise IastException(inspect.currentframe().f_code.co_name + " failed:" + "asoc report generation failed")
         time.sleep(2)
+        counter -= 1
     raise IastException(inspect.currentframe().f_code.co_name + " failed:" + "Timed out waiting for report ready")
 
 
