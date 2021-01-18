@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='asoc_automation_iast',
-      version='0.4',
+      version='0.5',
       description='asoc interface for handling iast',
       url='http://github.com/hclproducts/asoc_automation_iast',
       author='Tali Rabetti',
