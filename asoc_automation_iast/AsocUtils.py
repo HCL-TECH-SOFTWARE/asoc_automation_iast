@@ -236,7 +236,7 @@ def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0):
     headers = {"Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + token}
     json_response = None
     try:
-        response = post_request(url, headers=headers, json_body=scan_model, retries=retries, timeout=30)
+        response = post_request(url, headers=headers, json_body=scan_model, retries=retries, timeout=60)
         json_response = json.loads(response.text)
         agent_key = json_response["Agentkey"]
         scan_id = json_response["Id"]
