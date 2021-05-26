@@ -47,7 +47,7 @@ def post_request(url, params=None, headers=None, json_body=None, data=None, file
         headers = {}
     if params is None:
         params = {}
-    print_url(url, params, 'POST')
+    print_url(url, params, 'POST', json_body)
     error = None
     response = None
     try:
@@ -102,14 +102,16 @@ def delete_request(url, params=None, headers=None, timeout=30, retries=0):
             raise IastException(error)
 
 
-def print_url(url, params, http_method):
+def print_url(url, params, http_method, json_body=None):
+    line = f'{http_method} {url}'
     if len(params) > 0:
-        print(f"{http_method} {url}, params: {params}")
-    else:
-        print(f"{http_method} {url}")
+        line += f', params: {params}'
+    if json_body is not None:
+        line += f', body: {json_body}'
+    print(line)
 
 
-# spceial method to download zip file, as in this case the response can't be returned
+# special method to download zip file, as in this case the response can't be returned
 def download_request(url, params=None, headers=None, timeout=30, stream=False, retries=0):
     if headers is None:
         headers = {}

@@ -223,14 +223,14 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
 #         "AppId": <appId>,
 #         "Personal": False
 #     }
-def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0):
+def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False):
     scan_model = {
         "ConnLostStopTimer": "",  # Timeout in minutes to stop scan after agent connection lost
         "ScanName": scan_name,
         "EnableMailNotification": True,
         "Locale": "en-US",
         "AppId": app_id,
-        "Personal": False
+        "Personal": is_personal
     }
     url = host + "/Scans/IASTAnalyzer"
     headers = {"Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + token}
@@ -400,7 +400,7 @@ def get_new_iast_key_for_scan(scan_id, token, host=ASOC_API):
 #     }
 def create_report(scan_id, token, host=ASOC_API):
     # url
-    scope = "Scan"  # one of: Application/Sacn/ScanExecution (ScanExecution not supported)
+    scope = "Scan"  # one of: Application/Scan/ScanExecution (ScanExecution not supported)
     url = host + "/Reports/Security/" + scope + "/" + scan_id
 
     # headers
@@ -485,7 +485,7 @@ def download_report(report_id, token, host=ASOC_API):
     try:
         response = get_request(url, headers=headers, stream=False, timeout=30)
         report = ""
-        for chunk in response.iter_content(chunk_size=1024 * 36):
+        for chunk in response.iter_content(chunk_size=1024 * 1024):
             if chunk:
                 #  report.append(chunk)
                 report += chunk.decode("utf-8")
