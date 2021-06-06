@@ -122,7 +122,10 @@ def download_request(url, params=None, headers=None, timeout=30, stream=False, r
     response = None
     try:
         response = requests.get(url, verify=False, params=params, headers=headers, timeout=timeout, stream=stream)
-        print("response.status_code:", response.status_code)
+        status_code = response.status_code
+        print("response.status_code:", status_code)
+        if status_code != 200:
+            print(f'error: {response.content}')
         with open('IASTAgent.temp.zip', 'wb') as f:
             for chunk in response:
                 f.write(chunk)

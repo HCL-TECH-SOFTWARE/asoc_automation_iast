@@ -61,7 +61,7 @@ def stop_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
 
-# Downloads zip file with IAST agent war inside
+# Downloads zip file with IAST agent war inside - no asoc-config.json - need to set manually token
 # Swagger: https://cloud.appscan.com/IAST/swagger/ui/index#!/IAST/IAST_DownloadVersion
 # request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
 #     headers: "Authorization=Bearer <accessToken>"
@@ -70,6 +70,21 @@ def download_agent(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
     headers = {"Authorization": "Bearer " + agent_key}
     try:
         download_request(url, headers=headers, timeout=30, retries=retries)
+    except IastException as e:
+        raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
+
+
+# Downloads zip file with IAST agent war inside - with asoc-config.json - ready to work
+# note it will disable previous token for this scan
+# Swagger: https://cloud.appscan.com/api/V2/Tools/IAST/DownloadWithKey
+# request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
+#     headers: "Authorization=Bearer <accessToken>"
+def download_agent_with_key(token: str, scan_id: str, host=ASOC_API) -> None:
+    url = host + "/Tools/IAST/DownloadWithKey"
+    headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
+    params = {'scanId': scan_id}
+    try:
+        download_request(url, headers=headers, timeout=30, params=params)
     except IastException as e:
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
@@ -221,16 +236,18 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
 #         "EnableMailNotification": True,
 #         "Locale": "en-US",
 #         "AppId": <appId>,
-#         "Personal": False
+#         "Personal": False,
+#         "AgentType": "Java" - one of: Java, DotNet, NodeJS
 #     }
-def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False):
+def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False, agent_type='Java'):
     scan_model = {
         "ConnLostStopTimer": "",  # Timeout in minutes to stop scan after agent connection lost
         "ScanName": scan_name,
         "EnableMailNotification": True,
         "Locale": "en-US",
         "AppId": app_id,
-        "Personal": is_personal
+        "Personal": is_personal,
+        "AgentType": agent_type,
     }
     url = host + "/Scans/IASTAnalyzer"
     headers = {"Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + token}
