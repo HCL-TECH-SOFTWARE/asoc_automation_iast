@@ -43,16 +43,26 @@ def get_request(url, params=None, headers=None, timeout=30, stream=False, retrie
 
 
 def post_request(url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
+    return __put_or_post_request('POST', url, params, headers, json_body, data, files, timeout, retries)
+
+def put_request(url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
+    return __put_or_post_request('PUT', url, params, headers, json_body, data, files, timeout, retries)
+
+def __put_or_post_request(method_name, url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
     if headers is None:
         headers = {}
     if params is None:
         params = {}
-    print_url(url, params, 'POST', json_body)
+    print_url(url, params, method_name, json_body)
     error = None
     response = None
     try:
-        response = requests.post(
-            url, verify=False, params=params, headers=headers, json=json_body, data=data, files=files, timeout=timeout)
+        if method_name == 'POST':
+            response = requests.post(
+                url, verify=False, params=params, headers=headers, json=json_body, data=data, files=files, timeout=timeout)
+        else:
+            response = requests.put(
+                url, verify=False, params=params, headers=headers, json=json_body, data=data, files=files, timeout=timeout)
         response.raise_for_status()
     except requests.exceptions.Timeout:
         error = f"request to {url} timed out."
@@ -68,12 +78,13 @@ def post_request(url, params=None, headers=None, json_body=None, data=None, file
     if error is not None:
         if retries > 0:
             print(error + ". Retrying request.")
-            post_request(url, params=params, headers=headers, json_body=json_body, data=data, files=files,
+            __put_or_post_request(method_name=method_name, url=url, params=params, headers=headers, json_body=json_body, data=data, files=files,
                          timeout=timeout, retries=retries-1)
         else:
             raise IastException(error)
     else:
         return response
+
 
 
 def delete_request(url, params=None, headers=None, timeout=30, retries=0):

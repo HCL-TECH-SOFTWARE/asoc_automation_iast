@@ -16,7 +16,7 @@ import time
 import requests
 
 from .IastUtils import IastException
-from .RequestApi import post_request, get_request, delete_request, download_request
+from .RequestApi import post_request, get_request, delete_request, download_request, put_request
 
 ASOC_IAST_API = "https://cloud.appscan.com/IAST/"
 ASOC_API = "https://cloud.appscan.com/api/v2"
@@ -239,7 +239,7 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
 #         "Personal": False,
 #         "AgentType": "Java" - one of: Java, DotNet, NodeJS
 #     }
-def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False, agent_type='Java'):
+def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False, agent_type='Java', config_file_id=None):
     scan_model = {
         "ConnLostStopTimer": "",  # Timeout in minutes to stop scan after agent connection lost
         "ScanName": scan_name,
@@ -249,6 +249,8 @@ def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=
         "Personal": is_personal,
         "AgentType": agent_type,
     }
+    if config_file_id != None:
+        scan_model.update({"ConfigFileId": config_file_id})
     url = host + "/Scans/IASTAnalyzer"
     headers = {"Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + token}
     json_response = None
@@ -392,6 +394,42 @@ def get_new_iast_key_for_scan(scan_id, token, host=ASOC_API):
             raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
     except KeyError as e:
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
+
+
+# Swagger: https://cloud.appscan.com/swagger/ui/index#!/FileUpload/FileUpload_Upload
+# request URL : POST https://cloud.appscan.com/api/v2/FileUpload
+#     headers: "Authorization=Bearer <token>"
+#     params: "fileToUpload=<filePath>"
+def upload_file(token, file_to_upload, host=ASOC_API):
+    url = host + "/FileUpload"
+    headers = {"Authorization": "Bearer " + token, "Accept": "text/plain"}
+    json_response = ""
+    try:
+        with open(file_to_upload, "rb") as file:
+            response = post_request(url, headers=headers, files={"fileToUpload": file})
+        json_response = json.loads(response.text)
+        file_id = json_response["FileId"]
+        return file_id
+    except IastException as e:
+        raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
+    except KeyError as e:
+        raise IastException(inspect.currentframe().f_code.co_name + " failed:" + "KeyError:" + str(e) +
+                            " not in response: " + str(json_response))
+
+# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_UpdateIastScanByScanid
+# request URL : PUT https://cloud.appscan.com/api/v2/Scans/{scanId}/UpdateIastScan
+#     headers: "Authorization=Bearer <token>"
+#     params: "scanId=<scanId>, scanData=<scanData>"
+def update_iast_scan(scan_id, token, file_id, host=ASOC_API, retries=0):
+    scan_model = {
+        "ConfigFileId": file_id
+    }
+    url = host + f"/Scans/{scan_id}/UpdateIastScan"
+    headers = {"Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + token}
+    try:
+        put_request(url, headers=headers, params={"scanId": scan_id}, json_body=scan_model, retries=retries, timeout=30)
+    except IastException as e:
+        raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
 #####################################################
 # ASOC - report API https://cloud.appscan.com/swagger/ui/
