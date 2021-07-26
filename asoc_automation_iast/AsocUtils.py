@@ -406,7 +406,7 @@ def upload_file(token, file_to_upload, host=ASOC_API):
     json_response = ""
     try:
         with open(file_to_upload, "rb") as file:
-            response = post_request(url, headers=headers, files={"fileToUpload": file})
+            response = post_request(url, headers=headers, files={"fileToUpload": file}, timeout=60, retries=2)
         json_response = json.loads(response.text)
         file_id = json_response["FileId"]
         return file_id
