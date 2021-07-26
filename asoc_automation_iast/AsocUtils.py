@@ -400,13 +400,13 @@ def get_new_iast_key_for_scan(scan_id, token, host=ASOC_API):
 # request URL : POST https://cloud.appscan.com/api/v2/FileUpload
 #     headers: "Authorization=Bearer <token>"
 #     params: "fileToUpload=<filePath>"
-def upload_file(token, file_to_upload, host=ASOC_API):
+def upload_file(token, file_to_upload, host=ASOC_API, timeout=60, retries=2):
     url = host + "/FileUpload"
     headers = {"Authorization": "Bearer " + token, "Accept": "text/plain"}
     json_response = ""
     try:
         with open(file_to_upload, "rb") as file:
-            response = post_request(url, headers=headers, files={"fileToUpload": file})
+            response = post_request(url, headers=headers, files={"fileToUpload": file}, timeout=timeout, retries=retries)
         json_response = json.loads(response.text)
         file_id = json_response["FileId"]
         return file_id
