@@ -18,20 +18,23 @@ import asoc_automation_iast.IastUtils as IastUtils
 
 def print_usage():
     print(f"Description: Inject agen key from ASoC to an IAST agent war file")
-    print(f"Usage: {sys.argv[0]} --key=1234abcd5678efgh --war=/path/to/war")
+    print(f"Usage: {sys.argv[0]} --key=1234abcd5678efgh --war=/path/to/war [--host=asoc/ase host]")
 
 
 def main():
     agent_key = None
     path_to_war = None
+    host = "https://cloud.appscan.com/IAST/"
     try:
         # get parameters from user
-        opts, args = getopt.getopt(sys.argv[1:], "", ['key=', "war="])
+        opts, args = getopt.getopt(sys.argv[1:], "", ['key=', "war=", "host="])
         for opt, arg in opts:
             if opt == '--key':
                 agent_key = arg
             if opt == '--war':
                 path_to_war = arg
+            if opt == '--host':
+                host = arg
     except getopt.GetoptError as e:
         sys.stderr.write(f"Invalid command line: {sys.argv[1:]}")
         sys.stderr.write(str(e))
@@ -44,7 +47,7 @@ def main():
 
     # create a user config file
     with open(IastUtils.asoc_config_filename, 'w') as user_config_file:
-        json.dump({'accessToken': agent_key}, user_config_file)
+        json.dump({'accessToken': agent_key, 'host': host}, user_config_file)
 
     # allow for path with or without the filename
     if not path_to_war.endswith(IastUtils.war_name):

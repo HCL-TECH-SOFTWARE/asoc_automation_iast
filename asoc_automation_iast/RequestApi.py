@@ -45,8 +45,10 @@ def get_request(url, params=None, headers=None, timeout=30, stream=False, retrie
 def post_request(url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
     return __put_or_post_request('POST', url, params, headers, json_body, data, files, timeout, retries)
 
+
 def put_request(url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
     return __put_or_post_request('PUT', url, params, headers, json_body, data, files, timeout, retries)
+
 
 def __put_or_post_request(method_name, url, params=None, headers=None, json_body=None, data=None, files=None, timeout=30, retries=0):
     if headers is None:
@@ -84,7 +86,6 @@ def __put_or_post_request(method_name, url, params=None, headers=None, json_body
             raise IastException(error)
     else:
         return response
-
 
 
 def delete_request(url, params=None, headers=None, timeout=30, retries=0):
