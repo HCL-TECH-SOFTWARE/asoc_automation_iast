@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #######################################################################################################################
 # Licensed Materials –Property of HCL Technologies Ltd.
-# © Copyright HCL Technologies Ltd. 2020.
+# © Copyright HCL Technologies Ltd. 2022.
 # All rights reserved. See product license for details. US Government Users Restricted Rights. Use, duplication,
 # or disclosure restricted by GSA ADP Schedule Contract with HCL Technologies Ltd. Java and all Java-based trademarks
 # and logos are trademarks or registered trademarks of Oracle and/or its affiliates. HCL, the HCL logo,
@@ -28,7 +28,7 @@ zip_filename = 'IASTAgent.zip'
 # ASOC - IAST API https://stage.cloud.appscan.com/IAST/swagger/ui/
 ####################################################################
 def url_join(*arguments):
-    return '/'.join([argument.strip('/') for argument in arguments])
+    return '/'.join([arg.strip('/') if isinstance(arg, str) else arg for arg in arguments])
 
 
 # start new execution directly from ASoC IAST interface
@@ -266,7 +266,6 @@ def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=
         logging.info("scan_id: " + scan_id)
         return agent_key, scan_id
     except IastException as e:
-
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
     except KeyError as e:
         raise IastException(inspect.currentframe().f_code.co_name + " failed:" + "KeyError:" + str(e) +
