@@ -15,8 +15,8 @@ import time
 
 import requests
 
-from .IastUtils import IastException
-from .RequestApi import post_request, get_request, delete_request, download_request, put_request
+from IastUtils import IastException
+from RequestApi import post_request, get_request, delete_request, download_request, put_request
 
 ASOC_IAST_API = "https://cloud.appscan.com/IAST/"
 ASOC_API = "https://cloud.appscan.com/api/v2"
