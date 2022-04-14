@@ -13,8 +13,8 @@ from typing import Any
 
 import requests
 
-from IastUtils import IastException
-from RequestApi import post_request, get_request, delete_request, download_request, put_request
+from .IastUtils import IastException
+from .RequestApi import post_request, get_request, delete_request, download_request, put_request
 
 
 #####################################################
