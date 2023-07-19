@@ -80,7 +80,7 @@ def get_issue_details_from_asoc(issue_id, token, host):
     url = host + "/Issues/" + issue_id + "/Artifacts"
     headers = {"Authorization": "Bearer " + token, "Accept": "text/xml"}
     try:
-        response = get_request(url, headers=headers, stream=False, timeout=30)
+        response = get_request(url, headers=headers, stream=False, timeout=60, retries=20)
         return response.content.decode("utf-8")
     except requests.exceptions.HTTPError as e:
         raise IastException(e)
