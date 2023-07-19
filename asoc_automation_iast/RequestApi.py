@@ -35,7 +35,7 @@ def get_request(url, params=None, headers=None, timeout=30, stream=False, retrie
     if error is not None:
         if retries > 0:
             print(error + ". Retrying request.")
-            get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries-1)
+            return get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries-1)
         else:
             raise IastException(error)
     else:
@@ -80,7 +80,7 @@ def __put_or_post_request(method_name, url, params=None, headers=None, json_body
     if error is not None:
         if retries > 0:
             print(error + ". Retrying request.")
-            __put_or_post_request(method_name=method_name, url=url, params=params, headers=headers, json_body=json_body, data=data, files=files,
+            return __put_or_post_request(method_name=method_name, url=url, params=params, headers=headers, json_body=json_body, data=data, files=files,
                          timeout=timeout, retries=retries-1)
         else:
             raise IastException(error)
@@ -150,7 +150,7 @@ def download_request(url, params=None, headers=None, timeout=30, stream=False, r
     if error is not None:
         if retries > 0:
             print(error + ". Retrying request.")
-            get_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries-1)
+            return download_request(url, params=params, headers=headers, timeout=timeout, stream=stream, retries=retries-1)
         else:
             raise IastException(error)
     else:
