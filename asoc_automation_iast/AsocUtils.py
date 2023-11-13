@@ -68,7 +68,7 @@ def stop_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
 # Swagger: https://cloud.appscan.com/IAST/swagger/ui/index#!/IAST/IAST_DownloadVersion
 # request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
 #     headers: "Authorization=Bearer <accessToken>"
-def download_agent(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
+def download_agent_iast_api(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
     url = url_join(host, "/api/DownloadVersion")
     headers = {"Authorization": "Bearer " + agent_key}
     try:
