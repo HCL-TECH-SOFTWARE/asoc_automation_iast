@@ -92,6 +92,21 @@ def download_agent_with_key(token: str, scan_id: str, host=ASOC_API) -> None:
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
 
+# Downloads zip file with IAST agent war inside - with asoc-config.json - ready to work
+# note it will disable previous token for this scan
+# Swagger: https://cloud.appscan.com/api/V2/Tools/IAST/DownloadWithKey
+# request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
+#     headers: "Authorization=Bearer <accessToken>"
+def download_agent(token: str, agent_type: str, host=ASOC_API) -> None:
+    url = url_join(host, "/Tools/IAST/Download")
+    headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
+    params = {'type': agent_type}
+    try:
+        download_request(url, headers=headers, timeout=30, params=params)
+    except IastException as e:
+        raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
+
+
 #####################################################
 # ASOC - API https://cloud.appscan.com/swagger/ui/
 #####################################################
