@@ -193,7 +193,7 @@ def main():
 
         with temp_directory('temp'):
             # download IASTAgent.zip, which holds the secagent.war
-            download_agent(agent_key)
+            download_agent_iast_api(agent_key)
 
             # extract the downloaded zip file to temp directory
             print("extracting zip file")
