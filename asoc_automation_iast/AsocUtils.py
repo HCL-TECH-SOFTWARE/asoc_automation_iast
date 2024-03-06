@@ -98,7 +98,6 @@ def download_agent_with_key(token: str, scan_id: str, host=ASOC_API) -> None:
 # request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
 #     headers: "Authorization=Bearer <accessToken>"
 def download_agent(token: str, agent_type: str, host=ASOC_API) -> None:
-    # "Need to verify"
     url = url_join(host, "/Tools/IAST/Download")
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
     params = {'type': agent_type}
@@ -143,12 +142,12 @@ def get_api_key_login(key_id, key_secret, host=ASOC_API, retries=0):
 #     headers: "Authorization=Bearer <token>"
 def get_default_asset_group(token, host=ASOC_API):
     url = url_join(host, "/AssetGroups")
-    params = {"$filter": "IsDefault eq true", "$select": "Id"}
+    params = {"$filter": "IsDefault eq true", "$select": "Id", "$count": "true"}
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     try:
         response = get_request(url, params=params, headers=headers, timeout=30)
         json_response = json.loads(response.text)
-        if len(json_response) == 0:
+        if json_response["Count"] == 0:
             raise IastException("Error - No default asset group found.")
         asset_group_id = json_response["Items"][0]["Id"]
         return asset_group_id
@@ -192,7 +191,6 @@ def create_app(token, app_name, asset_group, host=ASOC_API, retries=0):
 def get_app_name_by_id(app_id, token, host=ASOC_API):
     url = url_join(host, "/Apps")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
-    "Change found without running any application"
     params = {"$filter": f"Id eq {app_id}"}
     try:
         response = get_request(url, params=params, headers=headers, timeout=30)
@@ -216,13 +214,12 @@ def get_app_name_by_id(app_id, token, host=ASOC_API):
 def get_app_id_by_name(app_name, token, host=ASOC_API):
     url = url_join(host, "/Apps")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
-    params = {"$filter": f"Name eq '{app_name}'", "$select": "Id"}
+    params = {"$filter": f"Name eq '{app_name}'", "$select": "Id", "$count": "true"}
     try:
         response = get_request(url, params=params, headers=headers, timeout=30)
         json_response = json.loads(response.text)
-        if len(json_response) == 0:
+        if json_response["Count"] == 0:
             return None
-        "Change found without running any application"
         app_id = json_response["Items"][0]["Id"]
         return app_id
     except IastException as e:
@@ -297,7 +294,6 @@ def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=
 def get_scan_info_by_id(scan_id, token, host=ASOC_API):
     url = url_join(host,  "/Scans")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
-    "Change found without running any application"
     params = {"$filter": f"Id eq {scan_id}"}
     try:
         response = get_request(url, params=params, headers=headers, timeout=30)
@@ -322,11 +318,11 @@ def get_scan_info_by_id(scan_id, token, host=ASOC_API):
 def get_scan_info_by_name(scan_name, token, host=ASOC_API):
     url = url_join(host, "Scans")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
-    params = {"$filter": f"Name eq '{scan_name}'"}
+    params = {"$filter": f"Name eq '{scan_name}'", "$count": "true"}
     try:
         response = get_request(url, params=params, headers=headers, timeout=30)
         json_response = json.loads(response.text)
-        if len(json_response) == 0:
+        if json_response["Count"] == 0:
             return None, None, None
         scan_id = json_response["Items"][0]["Id"]
         app_name = json_response["Items"][0]["AppName"]
