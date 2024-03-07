@@ -257,9 +257,10 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
 #         "Personal": False,
 #         "AgentType": "Java" - one of: Java, DotNet, NodeJS
 #     }
-def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False, agent_type='Java', config_file_id=None):
+def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=False, agent_type='Java',
+                config_file_id=None, stop_scan=1000):
     scan_model = {
-        "ConnLostStopTimer": 31,  # Timeout in minutes to stop scan after agent connection lost
+        "ConnLostStopTimer": stop_scan,  # Timeout in minutes to stop scan after agent connection lost
         "ScanName": scan_name,
         "EnableMailNotification": True,
         "Locale": "en-US",
