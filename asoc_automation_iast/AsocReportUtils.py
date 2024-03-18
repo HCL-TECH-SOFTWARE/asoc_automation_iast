@@ -28,7 +28,7 @@ from .RequestApi import post_request, get_request, delete_request, download_requ
 def get_issues_for_scan(scan_id, token, host) -> Any:
     url = host + "/Issues/Scan/" + scan_id
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
-    params = {"$select": "AsmHash,IssueTypeId,Id,Path,ScanName,ApplicationId,Api,SourceFile", "$inlinecount": "allpages"}
+    params = {"$select": "AsmHash,IssueTypeId,Id,Path,ScanName,ApplicationId,Api,SourceFile", "$count": "true"}
     try:
         response = get_request(url, headers=headers, stream=False, params=params, timeout=30)
         json_response = json.loads(response.text)
@@ -50,7 +50,7 @@ def get_issues_for_scan(scan_id, token, host) -> Any:
 def get_issues_for_execution(execution_id, token, host):
     url = host + "/Issues/ScanExecution/" + execution_id
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
-    params = {"$select": "AsmHash,IssueTypeId,Id,Path,Api", "$inlinecount": "allpages"}
+    params = {"$select": "AsmHash,IssueTypeId,Id,Path,Api", "$count": "true"}
     try:
         response = get_request(url, headers=headers, stream=False, params=params, timeout=30)
         json_response = json.loads(response.text)
@@ -77,7 +77,7 @@ def get_issue(issue_id, token, host):
 # request URL : POST https://cloud.appscan.com//api/v2/Issues/{issueId}/Artifacts
 #     headers: "Authorization=Bearer <token>, Accept=text/xml"
 def get_issue_details_from_asoc(issue_id, token, host):
-    url = host + "/Issues/" + issue_id + "/Artifacts"
+    url = host + "/Issues/" + issue_id + "/Details"
     headers = {"Authorization": "Bearer " + token, "Accept": "text/xml"}
     try:
         response = get_request(url, headers=headers, stream=False, timeout=60, retries=20)
@@ -93,7 +93,7 @@ def get_issue_details_from_asoc(issue_id, token, host):
 def get_apps(token, host):
     url = host + "/Apps"
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
-    params = {"$filter": "Name ne 'IAST-testing'", "$orderby": "TotalIssues", "$select": "Name,Id"}
+    params = {"$filter": "Name ne 'IAST-testing'", "$orderby": "TotalIssues", "$select": "Name,Id", "$count": "true"}
     try:
         response = get_request(url, headers=headers, stream=False, params=params, timeout=30)
         json_response = json.loads(response.text)
