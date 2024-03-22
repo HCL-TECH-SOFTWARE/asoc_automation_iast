@@ -32,7 +32,6 @@ def url_join(*arguments):
 
 
 # start new execution directly from ASoC IAST interface
-# Swagger: https://cloud.appscan.com/IAST/swagger/ui/index#!/IAST/IAST_StartNewExecution
 # request URL : POST https://cloud.appscan.com/IAST/api/StartNewExecution
 #     headers: "Authorization=Bearer <accessToken>"
 def start_new_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> str:
@@ -52,7 +51,6 @@ def start_new_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> str:
 
 
 # stop current execution directly from ASoC IAST interface
-# Swagger: https://cloud.appscan.com/IAST/swagger/ui/index#!/IAST/IAST_StopExecution
 # request URL : POST https://cloud.appscan.com/IAST/api/StopExecution
 #     headers: "Authorization=Bearer <accessToken>"
 def stop_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
@@ -65,7 +63,6 @@ def stop_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
 
 
 # Downloads zip file with IAST agent war inside - no asoc-config.json - need to set manually token
-# Swagger: https://cloud.appscan.com/IAST/swagger/ui/index#!/IAST/IAST_DownloadVersion
 # request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
 #     headers: "Authorization=Bearer <accessToken>"
 def download_agent_iast_api(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
@@ -79,8 +76,7 @@ def download_agent_iast_api(agent_key: str, host=ASOC_IAST_API, retries=0) -> No
 
 # Downloads zip file with IAST agent war inside - with asoc-config.json - ready to work
 # note it will disable previous token for this scan
-# Swagger: https://cloud.appscan.com/api/V4/Tools/IastAgentWithKey
-# request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
+# request URL : GET https://cloud.appscan.com/api/V4/Tools/IastAgentWithKey
 #     headers: "Authorization=Bearer <accessToken>"
 def download_agent_with_key(token: str, scan_id: str, host=ASOC_API) -> None:
     url = url_join(host, "/Tools/IastAgentWithKey")
@@ -94,8 +90,7 @@ def download_agent_with_key(token: str, scan_id: str, host=ASOC_API) -> None:
 
 # Downloads zip file with IAST agent war inside - with asoc-config.json - ready to work
 # note it will disable previous token for this scan
-# Swagger: https://cloud.appscan.com/api/V4/Tools/IastAgent
-# request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
+# request URL : GET https://cloud.appscan.com/api/V4/Tools/IastAgent
 #     headers: "Authorization=Bearer <accessToken>"
 def download_agent(token: str, agent_type: str, host=ASOC_API) -> None:
     url = url_join(host, "Tools/IastAgent")
@@ -112,7 +107,6 @@ def download_agent(token: str, agent_type: str, host=ASOC_API) -> None:
 #####################################################
 
 # Authenticate using the API Key ID / Secret.Return a Bearer Token used for all other REST APIs
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Account/Account_ApiKeyLogin
 # request URL : POST https://cloud.appscan.com/api/V4/Account/ApiKeyLogin
 #    json: { "KeyId" : "aaa" , "KeySecret" : "bbb" }
 def get_api_key_login(key_id, key_secret, host=ASOC_API, retries=0):
@@ -136,7 +130,6 @@ def get_api_key_login(key_id, key_secret, host=ASOC_API, retries=0):
                             " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/AssetGroups/AssetGroups_GetAssetGroups
 # request URL : GET https://cloud.appscan.com/api/V4/AssetGroups
 #     params: "$filter=IsDefault eq true, $select=Id, $count: true"
 #     headers: "Authorization=Bearer <token>"
@@ -161,7 +154,6 @@ def get_default_asset_group(token, host=ASOC_API):
 #####################################################
 # ASOC - Apps API
 #####################################################
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_CreateApp
 # request URL : POST https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>"
 def create_app(token, app_name, asset_group, host=ASOC_API, retries=0):
@@ -184,7 +176,6 @@ def create_app(token, app_name, asset_group, host=ASOC_API, retries=0):
                             " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_GetApp
 # request URL : GET https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <appId>"
@@ -207,7 +198,6 @@ def get_app_name_by_id(app_id, token, host=ASOC_API):
                             " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_GetApps
 # request URL : GET https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter=Name eq <appName>, $select=Id, , $count: true"
@@ -229,7 +219,6 @@ def get_app_id_by_name(app_name, token, host=ASOC_API):
                             " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_DeleteApp
 # request URL : DELETE https://cloud.appscan.com/api/V4/Apps/<app_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<appId>"
@@ -245,7 +234,6 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
 #####################################################
 # ASOC - scan API
 #####################################################
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_CreateIastAnalyzerScan
 # request URL : POST https://cloud.appscan.com/api/V4/Scans/Iast
 #     headers: "Authorization=Bearer <token>, Accept: application/json, Content-Type: application/json"
 #     json: {
@@ -288,7 +276,6 @@ def create_scan(app_id, token, scan_name, host=ASOC_API, retries=0, is_personal=
                             " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_GetScan
 # request URL : GET https://cloud.appscan.com/api/V4/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <scanId>"
@@ -312,7 +299,6 @@ def get_scan_info_by_id(scan_id, token, host=ASOC_API):
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_GetScans
 # request URL : GET https://cloud.appscan.com/api/V4/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <scanName>, $count: true"
@@ -336,7 +322,6 @@ def get_scan_info_by_name(scan_name, token, host=ASOC_API):
                             " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_GetScan
 # request URL : GET https://cloud.appscan.com/api/V4/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$select=<Id>, $count: true"
@@ -357,7 +342,6 @@ def get_scans(token, host=ASOC_API):
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
 
 
-# Swagger: https://https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_ScansById
 # request URL : GET https://https://cloud.appscan.com/api/v4/Apps/<app_id>/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$select=<Id>, $count: true"
@@ -378,7 +362,6 @@ def get_scans_for_app(token, app_id, host=ASOC_API):
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_DeleteScan
 # request URL : DELETE https://cloud.appscan.com/api/V4/Scans/<scan_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>, deleteIssues=True"
@@ -393,7 +376,6 @@ def delete_scan(scan_id, token, host=ASOC_API, retries=0):
             raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_GenerateNewIastKey
 # request URL : POST https://cloud.appscan.com/api/V4/Scans/NewIASTKey/<scan_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>"
@@ -414,7 +396,6 @@ def get_new_iast_key_for_scan(scan_id, token, host=ASOC_API):
         raise IastException("KeyError:" + str(e) + " not in response: " + str(json_response))
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/FileUpload/FileUpload_Upload
 # request URL : POST https://cloud.appscan.com/api/v4/FileUpload
 #     headers: "Authorization=Bearer <token>"
 #     params: "uploadedFile=<filePath>"
@@ -434,7 +415,7 @@ def upload_file(token, file_to_upload, host=ASOC_API, timeout=60, retries=2):
         raise IastException(inspect.currentframe().f_code.co_name + " failed:" + "KeyError:" + str(e) +
                             " not in response: " + str(json_response))
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Scans/Scans_UpdateIastScanByScanid
+
 # request URL : PUT https://cloud.appscan.com/api/v4/Scans/UpdateIastScan/{scanId}
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>, scanData=<scanData>"
@@ -455,7 +436,6 @@ def update_iast_scan(scan_id, token, file_id, host=ASOC_API, retries=0):
 
 
 # starts a report creation
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Reports/Reports_CreateSecurityReport
 # request URL : POST https://cloud.appscan.com/api/V4/Reports/Security/<scope>/<id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scope=Scan, id=<scanId>"
@@ -509,7 +489,6 @@ def create_report(scan_id, token, host=ASOC_API):
 
 
 # returns the status of report preparation
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Reports/Reports_GetReportJobs
 # request URL : GET https://cloud.appscan.com/api/V4/Reports
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <reportId>"
@@ -549,7 +528,6 @@ def wait_for_report_ready(report_id, token, max_retries=100, host=ASOC_API):
 
 
 # returns the status of report preparation
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Reports/Reports_DownloadReport
 # request URL : GET https://cloud.appscan.com/api/V4/Reports/<report_id>/Download
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<reportId>"
