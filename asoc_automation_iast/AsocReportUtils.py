@@ -21,10 +21,9 @@ from .RequestApi import post_request, get_request, delete_request, download_requ
 # Report API
 #####################################################
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Issues/Issues_GetIssuesForScopeByScopeAndScopeid
-# request URL : POST https://cloud.appscan.com/api/V2/Issues/Scan/<scan_id>
+# request URL : POST https://cloud.appscan.com/api/V4/Issues/Scan/<scan_id>
 #     headers: "Authorization=Bearer <token>, Accept=application/json"
-#     params: "$select=AsmHash,IssueType,Id, $inlinecount=allpages"
+#     params: "$select=AsmHash,IssueTypeId,Id,Path,ScanName,ApplicationId,Api,SourceFile, $count": "true"
 def get_issues_for_scan(scan_id, token, host) -> Any:
     url = host + "/Issues/Scan/" + scan_id
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
@@ -43,10 +42,9 @@ def get_issues_for_scan(scan_id, token, host) -> Any:
         raise IastException(e)
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Issues/Issues_GetIssuesForScopeByScopeAndScopeid
-# request URL : POST https://cloud.appscan.com/api/V2/Issues/ScanExecution/<execution_id>
+# request URL : POST https://cloud.appscan.com/api/V4/Issues/ScanExecution/<execution_id>
 #     headers: "Authorization=Bearer <token>, Accept=application/json"
-#     params: "$select=AsmHash,IssueType,Id, $inlinecount=allpages"
+#     params: "$select=AsmHash,IssueTypeId,Id,Path,Api, $count": "true"
 def get_issues_for_execution(execution_id, token, host):
     url = host + "/Issues/ScanExecution/" + execution_id
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
@@ -59,8 +57,7 @@ def get_issues_for_execution(execution_id, token, host):
         raise IastException(e)
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Issues/Issues_GetIssueById
-# request URL : POST https://cloud.appscan.com/api/V2/Issues/<issue_id>
+# request URL : POST https://cloud.appscan.com/api/V4/Issues/<issue_id>
 #     headers: "Authorization=Bearer <token>, Accept=application/json"
 def get_issue(issue_id, token, host):
     url = host + "/Issues/" + issue_id
@@ -73,8 +70,7 @@ def get_issue(issue_id, token, host):
         raise IastException(e)
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Issues/Issues_Artifacts
-# request URL : POST https://cloud.appscan.com//api/v2/Issues/{issueId}/Artifacts
+# request URL : POST https://cloud.appscan.com//api/v4/Issues/{issueId}/Details
 #     headers: "Authorization=Bearer <token>, Accept=text/xml"
 def get_issue_details_from_asoc(issue_id, token, host):
     url = host + "/Issues/" + issue_id + "/Details"
@@ -86,10 +82,9 @@ def get_issue_details_from_asoc(issue_id, token, host):
         raise IastException(e)
 
 
-# Swagger: https://cloud.appscan.com/swagger/ui/index#!/Apps/Apps_GetApps
-# request URL : POST https://cloud.appscan.com/api/V2/Apps
+# request URL : POST https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>, Accept=application/json"
-#     params:  "$filter=Name ne 'IAST-testing'&$orderby=TotalIssues&$select=Name,Id"
+#     params:  "$filter=Name ne 'IAST-testing' & $orderby=TotalIssues & $select=Name,Id & $count: true"
 def get_apps(token, host):
     url = host + "/Apps"
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
