@@ -83,7 +83,7 @@ def download_agent_iast_api(agent_key: str, host=ASOC_IAST_API, retries=0) -> No
 # request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
 #     headers: "Authorization=Bearer <accessToken>"
 def download_agent_with_key(token: str, scan_id: str, host=ASOC_API) -> None:
-    url = url_join(host, "/Tools/IAST/IastAgentWithKey")
+    url = url_join(host, "/Tools/IastAgentWithKey")
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
     params = {'scanId': scan_id}
     try:
