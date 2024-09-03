@@ -57,7 +57,7 @@ def stop_execution(agent_key: str, host=ASOC_IAST_API, retries=0) -> None:
     url = url_join(host, "/api/StopExecution")
     headers = {"Authorization": "Bearer " + agent_key}
     try:
-        post_request(url, headers=headers, timeout=30, retries=retries)
+        post_request(url, headers=headers, timeout=60, retries=retries)
     except IastException as e:
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
@@ -451,9 +451,9 @@ def update_iast_scan(scan_id, token, file_id, host=ASOC_API, retries=0):
 #         "IsTrialReport": True,
 #         "ReportFileType": Xml
 #     }
-def create_report(scan_id, token, host=ASOC_API):
+def create_report(scan_id, token, host=ASOC_API, scope="Scan"):
     # url
-    scope = "Scan"  # one of: Application/Scan/ScanExecution (ScanExecution not supported)
+    # scope is one of: Application/Scan/ScanExecution (ScanExecution not supported)
     url = url_join(host, "/Reports/Security/", scope, scan_id)
 
     # headers
