@@ -223,6 +223,7 @@ def get_app_id_by_name(app_name, token, host=ASOC_API):
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<appId>"
 def delete_app(app_id, token, host=ASOC_API, retries=0):
+    print(f"deleting app with id {app_id}")
     url = url_join(host, "Apps", app_id)
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
     try:
@@ -230,6 +231,21 @@ def delete_app(app_id, token, host=ASOC_API, retries=0):
     except IastException as e:
         raise IastException(f"{inspect.currentframe().f_code.co_name} failed: {str(e)}")
 
+
+# request URL : POST https://cloud.appscan.com/api/V4/Apps
+#     headers: "Authorization=Bearer <token>, Accept=application/json"
+#     params:  "$filter=Id eq {app_id},select=Name,Id,LastUpdated"
+def get_app_by_id(token, host, app_id):
+    url = host + "/Apps"
+    headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
+    params = {f"$filter": f"Id eq {app_id}", "$select": "Name,Id,LastUpdated",
+              "$count": "true"}
+    try:
+        response = get_request(url, headers=headers, stream=False, params=params, timeout=30)
+        json_response = json.loads(response.text)
+        return json_response
+    except requests.exceptions.HTTPError as e:
+        raise IastException(e)
 
 #####################################################
 # ASOC - scan API
