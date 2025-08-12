@@ -16,7 +16,7 @@ Find out more about the [AppScan IAST solution](https://s3.amazonaws.com/help.hc
   * Create a new scan for the IAST agent, associated to an existing application.
   * Create a new application and a new scan for the IAST agent.
   
-  The result is `IASTAgent.zip` file, with the IAST agent deployment file `Secagent.war` inside. Information about deploying the agent can be found here: https://s3.amazonaws.com/help.hcltechsw.com/appscan/ASoC/IAST_Deploy.html
+  The result is `IASTAgent.zip` file, with the IAST agent deployment file `Secagent.war` inside. Information about deploying the agent can be found [here](https://s3.amazonaws.com/help.hcltechsw.com/appscan/ASoC/IAST_Deploy.html).
 
 ### Usage: 
 `ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value --host=host_url --host_api=host_api]`
@@ -27,7 +27,7 @@ key id (required)
 ###### secret: 
 key secret (required)
 
-**NOTE**: KeyId/KeySecret pair can be obtained in the ASoC UI: https://cloud.appscan.com/AsoCUI/serviceui/main/myapps/portfolio, in the settings section. See more information here: https://help.hcltechsw.com/appscan/ASoC/appseccloud_rest_apis.html#ent_rest_apis
+**NOTE**: KeyId/KeySecret pair can be obtained in the [ASoC UI](https://cloud.appscan.com/AsoCUI/serviceui/main/myapps/portfolio), in the settings section. See more information [here](https://help.hcltechsw.com/appscan/ASoC/appseccloud_rest_apis.html#ent_rest_apis).
 
 ###### app_id: 
 Application id. If an application with such an id exists, it will be used, otherwise, the script will exit with an error. Use either app_name or app_id. (optional)
@@ -54,12 +54,10 @@ Path to download the Secagent.war. If not specified, the current directory will 
 ###### host:
 ASoC host url. If not specified, the default value will be used. (optional)
 
-###### host_api:
-ASoC host api url. If not specified, the default value will be used. (optional) 
-
-**IMPORTANT NOTE**: Host api url should contain the same base path as host url containing.
-###### Example: 
-if host: https://cloud.test.com/IAST/ then host_api: https://cloud.test.com/api/v4
+###### Examples: 
+--host=https://cloud.test.com,
+--host=https://as360.test.com,
+--host=https://cloud.test.com/eu
 
 ### Examples:
 ```ConfigureIastAgent.py --id=abcd --secret=efgh```  
@@ -86,7 +84,7 @@ If a scan named my-scan exists, it will be used. Otherwise, a new application wi
 ```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345```  
 If a scan named my-scan exists, it will be used. Otherwise, a new application named my-scan will be created, associated with app 12345.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345 --host=host_url --host_api=host_api_url```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345 --host=host_url```  
 If a scan named my-scan exists, it will be used. Otherwise, a new application named my-scan will be created, associated with app 12345.
 
 ### asoc-config.json
