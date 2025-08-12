@@ -26,6 +26,8 @@ app_name = None
 scan_id = None
 scan_name = None
 asset_group = None
+host = "https://cloud.appscan.com/IAST/"
+host_api = "https://cloud.appscan.com/api/v4"
 
 
 def get_user_args():
@@ -36,6 +38,8 @@ def get_user_args():
     global scan_id
     global scan_name
     global asset_group
+    global host
+    global host_api
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h", [option + '=' for option in input_options.keys()])
@@ -59,6 +63,10 @@ def get_user_args():
             scan_name = arg
         elif opt == '--asset_group':
             asset_group = arg
+        elif opt == '--host':
+            host = arg
+        elif opt == '--hostapi':
+            host_api = arg
         elif opt == '-h':
             usage()
             sys.exit(0)
@@ -79,7 +87,7 @@ def get_new_iast_key(token):
         "with ASoC anymore. ")#Continue? Y/N")
     #print("answer is", new_token)
 #    if new_token.lower() == 'y':
-    agent_key = get_new_iast_key_for_scan(scan_id, token)
+    agent_key = get_new_iast_key_for_scan(scan_id, token, host_api)
     return agent_key
     # else:
     #     print("Exiting.")
@@ -105,7 +113,7 @@ def main():
     get_user_args()
 
     try:
-        token = get_api_key_login(key_id, key_secret, retries=3)
+        token = get_api_key_login(key_id, key_secret, host_api, retries=3)
 
         #############################################################################
         # part 1 - figure out which parameters are given and what should be created:
@@ -193,7 +201,7 @@ def main():
 
         with temp_directory('temp'):
             # download IASTAgent.zip, which holds the secagent.war
-            download_agent_iast_api(agent_key)
+            download_agent_iast_api(agent_key, host)
 
             # extract the downloaded zip file to temp directory
             print("extracting zip file")

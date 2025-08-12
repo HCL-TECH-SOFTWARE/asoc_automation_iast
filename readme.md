@@ -16,10 +16,10 @@ Find out more about the [AppScan IAST solution](https://s3.amazonaws.com/help.hc
   * Create a new scan for the IAST agent, associated to an existing application.
   * Create a new application and a new scan for the IAST agent.
   
-  The result is `IASTAgent.zip` file, with the IAST agent deployment file `Secagent.war` inside. Information about deploying the agent can be found here: https://help.hcltechsw.com/appscan/Standard/10.0.0/en-US/IAST_Deploy.html
+  The result is `IASTAgent.zip` file, with the IAST agent deployment file `Secagent.war` inside. Information about deploying the agent can be found here: https://s3.amazonaws.com/help.hcltechsw.com/appscan/ASoC/IAST_Deploy.html
 
 ### Usage: 
-`ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value]`
+`ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value --host=host_url --host_api=host_api]`
 
 ###### id: 
 key id (required)
@@ -51,6 +51,16 @@ Asset group to use for generating an application. If not specified, the organiza
 ###### war_path: 
 Path to download the Secagent.war. If not specified, the current directory will be used. (optional)
 
+###### host:
+ASoC host url. If not specified, the default value will be used. (optional)
+
+###### host_api:
+ASoC host api url. If not specified, the default value will be used. (optional) 
+
+**IMPORTANT NOTE**: Host api url should contain the same base path as host url containing.
+###### Example: 
+if host: https://cloud.test.com/IAST/ then host_api: https://cloud.test.com/api/v4
+
 ### Examples:
 ```ConfigureIastAgent.py --id=abcd --secret=efgh```  
 A new application and a new IAST scan will be generated.
@@ -76,6 +86,8 @@ If a scan named my-scan exists, it will be used. Otherwise, a new application wi
 ```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345```  
 If a scan named my-scan exists, it will be used. Otherwise, a new application named my-scan will be created, associated with app 12345.
 
+```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345 --host=host_url --host_api=host_api_url```  
+If a scan named my-scan exists, it will be used. Otherwise, a new application named my-scan will be created, associated with app 12345.
 
 ### asoc-config.json
 The access token used to communicate with ASoC is saved in the downloaded IAST agent war file in the following format:
@@ -94,4 +106,4 @@ It is not required when downloading an IAST agent using ConfigureIastAgent.py.
 
 
 ### Usage
-`AddAgentKeyToWar.py --war=<path/to/war> --key=access_token`
+`AddAgentKeyToWar.py --war=<path/to/war> --key=access_token --host=host_url`
