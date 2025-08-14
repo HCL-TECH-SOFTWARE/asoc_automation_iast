@@ -74,12 +74,12 @@ from asoc_automation_iast.AsocUtils import (
 ## Example
 
 ```python
-token = get_api_key_login(key_id, key_secret)
-app_id = create_app(token, "MyApp", asset_group_id)
-agent_key, scan_id = create_scan(app_id, token, "MyScan")
-report_id = create_report(scan_id, token)
+token = get_api_key_login(key_id, key_secret, host)
+app_id = create_app(token, "MyApp", asset_group_id, host)
+agent_key, scan_id = create_scan(app_id, token, "MyScan", host)
+report_id = create_report(scan_id, token, host)
 wait_for_report_ready(report_id, token)
-report_content = download_report(report_id, token)
+report_content = download_report(report_id, token, host)
 ```
 
 ## Error Handling

@@ -27,6 +27,7 @@ app_name = None
 scan_id = None
 scan_name = None
 asset_group = None
+host = None
 
 def get_user_args():
     global key_id
@@ -36,6 +37,7 @@ def get_user_args():
     global scan_id
     global scan_name
     global asset_group
+    global host
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h", [option + '=' for option in input_options.keys()])
@@ -60,7 +62,7 @@ def get_user_args():
         elif opt == '--asset_group':
             asset_group = arg
         elif opt == '--host':
-            asoc_automation_iast.AsocUtils.HOST = arg
+            host = arg
         elif opt == '-h':
             usage()
             sys.exit(0)
@@ -81,7 +83,7 @@ def get_new_iast_key(token):
         "with ASoC anymore. ")#Continue? Y/N")
     #print("answer is", new_token)
 #    if new_token.lower() == 'y':
-    agent_key = get_new_iast_key_for_scan(scan_id, token)
+    agent_key = get_new_iast_key_for_scan(scan_id, token, host)
     return agent_key
     # else:
     #     print("Exiting.")
@@ -107,7 +109,7 @@ def main():
     get_user_args()
 
     try:
-        token = get_api_key_login(key_id, key_secret, retries=3)
+        token = get_api_key_login(key_id, key_secret, host, retries=3)
 
         #############################################################################
         # part 1 - figure out which parameters are given and what should be created:
@@ -117,7 +119,7 @@ def main():
 
         # if scan_id is provided, verify it exists and matches other parameters (if provided)
         if scan_id is not None:
-            asoc_scan_name, asoc_app_name, asoc_app_id = get_scan_info_by_id(scan_id, token)
+            asoc_scan_name, asoc_app_name, asoc_app_id = get_scan_info_by_id(scan_id, token, host)
             if scan_name is not None and scan_name != asoc_scan_name:
                 exit_with_error(f"Error - given scan name \'{scan_name}\' does not match the given scan id {scan_id}")
             if app_id is not None and app_id != asoc_app_id:
@@ -131,7 +133,7 @@ def main():
         # if scan_id is not provided and scan_name is provided,
         # it may refer to an existing scan. if yes - verify it exists and matches other parameters (if provided)
         elif scan_name is not None:
-            asoc_scan_id, asoc_app_name, asoc_app_id = get_scan_info_by_name(scan_name, token)
+            asoc_scan_id, asoc_app_name, asoc_app_id = get_scan_info_by_name(scan_name, token, host)
             if asoc_scan_id is not None:
                 if app_id is not None and app_id != asoc_app_id:
                     exit_with_error(f"Error - given app id {app_id} does not match the given scan name {scan_name}")
@@ -144,7 +146,7 @@ def main():
         # if scan_id and scan_name are not provided and app_id is provided,
         # verify it exists and matches other parameters (if provided)
         if app_id is not None:
-            asoc_app_name = get_app_name_by_id(app_id, token)
+            asoc_app_name = get_app_name_by_id(app_id, token, host)
             if asoc_app_name is None:
                 exit_with_error(f"Error - given app id {app_id} not found for the given credentials")
             if app_name is not None and asoc_app_name != app_name:
@@ -156,7 +158,7 @@ def main():
         # it may refer to an existing app. if yes - update app_id
         elif app_name is not None:  # app_id is not provided
             # check if this app exists
-            app_id = get_app_id_by_name(app_name, token)
+            app_id = get_app_id_by_name(app_name, token, host)
             if app_id is not None:
                 print(f"Configuring IAST agent to associate to existing application {app_name} with id {app_id}")
 
@@ -169,11 +171,11 @@ def main():
             print(f"Creating a new app.")
             # if user did not provide asset group, use default
             if asset_group is None:
-                asset_group = get_default_asset_group(token)
+                asset_group = get_default_asset_group(token, host)
             # if user did not provide app name, generate one
             if app_name is None:
                 app_name = "iast-app-" + current_time
-            app_id = create_app(token, app_name, asset_group)
+            app_id = create_app(token, app_name, asset_group, host)
             app_created = True
             print(f"Created a new application {app_name} with id {app_id}")
 
@@ -183,7 +185,7 @@ def main():
             # if user did not provide app name, generate one
             if scan_name is None:
                 scan_name = "iast-scan-" + current_time
-            agent_key, scan_id = create_scan(app_id, token, scan_name)
+            agent_key, scan_id = create_scan(app_id, token, scan_name, host)
             scan_created = True
             print(f"Created a new scan {scan_name} with id {scan_id}")
 
@@ -195,7 +197,7 @@ def main():
 
         with temp_directory('temp'):
             # download IASTAgent.zip, which holds the secagent.war
-            download_agent_iast_api(agent_key)
+            download_agent_iast_api(agent_key, host)
 
             # extract the downloaded zip file to temp directory
             print("extracting zip file")
