@@ -19,7 +19,7 @@ Find out more about the [AppScan IAST solution](https://s3.amazonaws.com/help.hc
   The result is `IASTAgent.zip` file, with the IAST agent deployment file `Secagent.war` inside. Information about deploying the agent can be found [here](https://s3.amazonaws.com/help.hcltechsw.com/appscan/ASoC/IAST_Deploy.html).
 
 ### Usage: 
-`ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value --host=host_url --host_api=host_api]`
+`ConfigureIastAgent.py --id=value --secret=value [--app_id=value --app_name=value --scan_id=value --scan_name=value --asset_group=value --war_path=value --to_file=value --host=host_url --host=host_url]`
 
 ###### id: 
 key id (required)
@@ -52,36 +52,38 @@ Asset group to use for generating an application. If not specified, the organiza
 Path to download the Secagent.war. If not specified, the current directory will be used. (optional)
 
 ###### host:
-ASoC host url. If not specified, the default value will be used. (optional)
+ASoC host url. If not specified, the default value will be ASoc US. (optional)
 
 ###### Examples: 
---host=https://cloud.test.com,
---host=https://as360.test.com,
---host=https://cloud.test.com/eu
+--host=https://cloud.appscan.com/,
+
+--host=https://eu.cloud.appscan.com/
+
+--host=https://as360.example.com,
 
 ### Examples:
-```ConfigureIastAgent.py --id=abcd --secret=efgh```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --host=host_url```  
 A new application and a new IAST scan will be generated.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --app_id=12345```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --app_id=12345 --host=host_url```  
 A new IAST scan will be generated, associated with an existing app with id 12345.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh  --app_name=my-app``` 
+```ConfigureIastAgent.py --id=abcd --secret=efgh  --app_name=my-app --host=host_url``` 
 A new IAST scan will be generated, if an application named my-app exists, it will be associated with it. Otherwise, a new application named my-app will be created, associated with the default asset group.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --app_name=my-app --asset_group=67890```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --app_name=my-app --asset_group=67890 --host=host_url```  
 A new IAST scan will be generated, if an application named my-app exists, it will be associated with it. Otherwise, a new application named my-app will be created, associated with asset group 67890.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --asset_group=67890```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --asset_group=67890 --host=host_url```  
 A new application with generated name will be created, associated to asset group 67890.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_id=12345```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_id=12345 --host=host_url```  
 scan with id 12345 will be used. 
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --host=host_url```  
 If a scan named my-scan exists, it will be used. Otherwise, a new application with generated name, and a new scan named my-scan will be created.
 
-```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345```  
+```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345 --host=host_url```  
 If a scan named my-scan exists, it will be used. Otherwise, a new application named my-scan will be created, associated with app 12345.
 
 ```ConfigureIastAgent.py --id=abcd --secret=efgh --scan_name=my-scan --app_id=12345 --host=host_url```  

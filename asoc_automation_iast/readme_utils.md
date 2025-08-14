@@ -36,10 +36,6 @@ apps = get_apps(token, host)
 
 Exceptions from the `requests` library are caught and handled. Custom exceptions are raised using `IastException` for HTTP errors.
 
-## License
-
-Licensed Materials – Property of HCL Technologies Ltd.
-
 ---
 
 # AsocUtils.py
@@ -90,15 +86,11 @@ report_content = download_report(report_id, token)
 
 Functions raise `IastException` for API errors and handle common issues such as missing keys or failed requests.
 
-## License
-
-Licensed Materials – Property of HCL Technologies Ltd.
-
 ---
 
 # IastUtils.py
 
-This module provides utility functions to manage config files.
+This module provides utility functions to add config files to Java IAST agent.
 
 ## Features
 
@@ -142,11 +134,7 @@ create_asoc_config_file(agent_key)
 file = read_existing_user_config(path_to_existing_file)
 add_user_config_to_war(path_to_war)
 ```
-
-## License
-
-Licensed Materials – Property of HCL Technologies Ltd.
-
+    
 ---
 
 # RequestApi.py
