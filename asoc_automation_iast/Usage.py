@@ -34,6 +34,9 @@ input_options = {
     "asset_group": (
         "Asset group to use for generating an application. If not specified, the organization's default asset group "
         "will be used. If an existing application is provided, this value is ignored.",
+        "optional"),
+    "host": (
+        "ASoC host url. If not specified, the default value will be ASoc US.",
         "optional")
 }
 

@@ -28,13 +28,16 @@ zip_filename = 'IASTAgent.zip'
 # ASOC - IAST API https://cloud.appscan.com/IAST/swagger/ui/
 ####################################################################
 def url_join(*arguments):
-    return '/'.join([arg.strip('/') if isinstance(arg, str) else arg for arg in arguments])
+    return '/'.join([arg.strip('/') if isinstance(arg, str) else arg for arg in arguments if arg is not None])
 
+def get_host(host):
+    return host if host is not None else HOST
 
 # start new execution directly from ASoC IAST interface
 # request URL : POST https://cloud.appscan.com/IAST/api/StartNewExecution
 #     headers: "Authorization=Bearer <accessToken>"
-def start_new_execution(agent_key: str, host=HOST, retries=0) -> str:
+def start_new_execution(agent_key: str, host=None, retries=0) -> str:
+    host = get_host(host)
     url = url_join(host, IAST_HOST, "api/StartNewExecution")
     headers = {"Authorization": "Bearer " + agent_key}
     json_response = None
@@ -53,7 +56,8 @@ def start_new_execution(agent_key: str, host=HOST, retries=0) -> str:
 # stop current execution directly from ASoC IAST interface
 # request URL : POST https://cloud.appscan.com/IAST/api/StopExecution
 #     headers: "Authorization=Bearer <accessToken>"
-def stop_execution(agent_key: str, host=HOST, retries=0) -> None:
+def stop_execution(agent_key: str, host=None, retries=0) -> None:
+    host = get_host(host)
     url = url_join(host, IAST_HOST, "/api/StopExecution")
     headers = {"Authorization": "Bearer " + agent_key}
     try:
@@ -65,7 +69,8 @@ def stop_execution(agent_key: str, host=HOST, retries=0) -> None:
 # Downloads zip file with IAST agent war inside - no asoc-config.json - need to set manually token
 # request URL : GET https://cloud.appscan.com/IAST/api/DownloadVersion
 #     headers: "Authorization=Bearer <accessToken>"
-def download_agent_iast_api(agent_key: str, host=HOST, retries=0) -> None:
+def download_agent_iast_api(agent_key: str, host=None, retries=0) -> None:
+    host = get_host(host)
     url = url_join(host, IAST_HOST, "/api/DownloadVersion")
     headers = {"Authorization": "Bearer " + agent_key}
     try:
@@ -78,7 +83,8 @@ def download_agent_iast_api(agent_key: str, host=HOST, retries=0) -> None:
 # note it will disable previous token for this scan
 # request URL : GET https://cloud.appscan.com/api/V4/Tools/IastAgentWithKey
 #     headers: "Authorization=Bearer <accessToken>"
-def download_agent_with_key(token: str, scan_id: str, host=HOST) -> None:
+def download_agent_with_key(token: str, scan_id: str, host=None) -> None:
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Tools/IastAgentWithKey")
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
     params = {'scanId': scan_id}
@@ -92,7 +98,8 @@ def download_agent_with_key(token: str, scan_id: str, host=HOST) -> None:
 # note it will disable previous token for this scan
 # request URL : GET https://cloud.appscan.com/api/V4/Tools/IastAgent
 #     headers: "Authorization=Bearer <accessToken>"
-def download_agent(token: str, agent_type: str, host=HOST) -> None:
+def download_agent(token: str, agent_type: str, host=None) -> None:
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "Tools/IastAgent")
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
     params = {'type': agent_type}
@@ -109,11 +116,13 @@ def download_agent(token: str, agent_type: str, host=HOST) -> None:
 # Authenticate using the API Key ID / Secret.Return a Bearer Token used for all other REST APIs
 # request URL : POST https://cloud.appscan.com/api/V4/Account/ApiKeyLogin
 #    json: { "KeyId" : "aaa" , "KeySecret" : "bbb" }
-def get_api_key_login(key_id, key_secret, host=HOST, retries=0):
+def get_api_key_login(key_id, key_secret, host=None, retries=0):
+    host = get_host(host)
     api_key = {
         "KeyId": key_id,
         "KeySecret": key_secret
     }
+    logging.info(f"test info host:{host}, ASOC_HOST:{ASOC_HOST}")
     url = url_join(host, ASOC_HOST, "/Account/ApiKeyLogin")
     headers = {"Accept": "application/json"}
     json_response = None
@@ -133,7 +142,8 @@ def get_api_key_login(key_id, key_secret, host=HOST, retries=0):
 # request URL : GET https://cloud.appscan.com/api/V4/AssetGroups
 #     params: "$filter=IsDefault eq true, $select=Id, $count: true"
 #     headers: "Authorization=Bearer <token>"
-def get_default_asset_group(token, host=HOST):
+def get_default_asset_group(token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/AssetGroups")
     params = {"$filter": "IsDefault eq true", "$select": "Id", "$count": "true"}
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
@@ -156,7 +166,8 @@ def get_default_asset_group(token, host=HOST):
 #####################################################
 # request URL : POST https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>"
-def create_app(token, app_name, asset_group, host=HOST, retries=0):
+def create_app(token, app_name, asset_group, host=None, retries=0):
+    host = get_host(host)
     app_model = {
         "Name": app_name,
         "AssetGroupId": asset_group
@@ -179,7 +190,8 @@ def create_app(token, app_name, asset_group, host=HOST, retries=0):
 # request URL : GET https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <appId>"
-def get_app_name_by_id(app_id, token, host=HOST):
+def get_app_name_by_id(app_id, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Apps")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     params = {"$filter": f"Id eq {app_id}"}
@@ -201,7 +213,8 @@ def get_app_name_by_id(app_id, token, host=HOST):
 # request URL : GET https://cloud.appscan.com/api/V4/Apps
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter=Name eq <appName>, $select=Id, , $count: true"
-def get_app_id_by_name(app_name, token, host=HOST):
+def get_app_id_by_name(app_name, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Apps")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     params = {"$filter": f"Name eq '{app_name}'", "$select": "Id", "$count": "true"}
@@ -222,7 +235,8 @@ def get_app_id_by_name(app_name, token, host=HOST):
 # request URL : DELETE https://cloud.appscan.com/api/V4/Apps/<app_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<appId>"
-def delete_app(app_id, token, host=HOST, retries=0):
+def delete_app(app_id, token, host=None, retries=0):
+    host = get_host(host)
     print(f"deleting app with id {app_id}")
     url = url_join(host, ASOC_HOST, "Apps", app_id)
     headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
@@ -236,6 +250,7 @@ def delete_app(app_id, token, host=HOST, retries=0):
 #     headers: "Authorization=Bearer <token>, Accept=application/json"
 #     params:  "$filter=Id eq {app_id},select=Name,Id,LastUpdated"
 def get_app_by_id(token, host, app_id):
+    host = get_host(host)
     url = url_join(host + ASOC_HOST + "/Apps")
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
     params = {f"$filter": f"Id eq {app_id}", "$select": "Name,Id,LastUpdated",
@@ -261,8 +276,9 @@ def get_app_by_id(token, host, app_id):
 #         "Personal": False,
 #         "AgentType": "Java" - one of: Java, DotNet, NodeJS
 #     }
-def create_scan(app_id, token, scan_name, host=HOST, retries=0, is_personal=False, agent_type='Java',
+def create_scan(app_id, token, scan_name, host=None, retries=0, is_personal=False, agent_type='Java',
                 config_file_id=None, stop_scan=1000, enable_email_notification=False):
+    host = get_host(host)
     scan_model = {
         "ConnLostStopTimer": stop_scan,  # Timeout in minutes to stop scan after agent connection lost
         "ScanName": scan_name,
@@ -295,7 +311,8 @@ def create_scan(app_id, token, scan_name, host=HOST, retries=0, is_personal=Fals
 # request URL : GET https://cloud.appscan.com/api/V4/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <scanId>"
-def get_scan_info_by_id(scan_id, token, host=HOST):
+def get_scan_info_by_id(scan_id, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST,  "/Scans")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     params = {"$filter": f"Id eq {scan_id}"}
@@ -318,7 +335,8 @@ def get_scan_info_by_id(scan_id, token, host=HOST):
 # request URL : GET https://cloud.appscan.com/api/V4/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <scanName>, $count: true"
-def get_scan_info_by_name(scan_name, token, host=HOST):
+def get_scan_info_by_name(scan_name, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "Scans")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     params = {"$filter": f"Name eq '{scan_name}'", "$count": "true"}
@@ -341,7 +359,8 @@ def get_scan_info_by_name(scan_name, token, host=HOST):
 # request URL : GET https://cloud.appscan.com/api/V4/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$select=<Id>, $count: true"
-def get_scans(token, host=HOST):
+def get_scans(token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Scans")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     params = {"$select": "Id", "$count": "true"}
@@ -361,7 +380,8 @@ def get_scans(token, host=HOST):
 # request URL : GET https://https://cloud.appscan.com/api/v4/Apps/<app_id>/Scans
 #     headers: "Authorization=Bearer <token>"
 #     params: "$select=<Id>, $count: true"
-def get_scans_for_app(token, app_id, host=HOST):
+def get_scans_for_app(token, app_id, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "Apps", app_id, "Scans")
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     params = {"$select": "Id", "$count": "true"}
@@ -381,8 +401,9 @@ def get_scans_for_app(token, app_id, host=HOST):
 # request URL : DELETE https://cloud.appscan.com/api/V4/Scans/<scan_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>, deleteIssues=True"
-def delete_scan(scan_id, token, host=HOST, retries=0):
+def delete_scan(scan_id, token, host=None, retries=0):
     if scan_id is not None:
+        host = get_host(host)
         url = url_join(host, ASOC_HOST, "Scans", scan_id)
         headers = {"Accept": "text/plain", "Authorization": "Bearer " + token}
         params = {"deleteIssues": True}
@@ -395,7 +416,8 @@ def delete_scan(scan_id, token, host=HOST, retries=0):
 # request URL : POST https://cloud.appscan.com/api/V4/Scans/NewIASTKey/<scan_id>
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>"
-def get_new_iast_key_for_scan(scan_id, token, host=HOST):
+def get_new_iast_key_for_scan(scan_id, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Scans/NewIASTKey/", scan_id)
     headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
     try:
@@ -415,7 +437,8 @@ def get_new_iast_key_for_scan(scan_id, token, host=HOST):
 # request URL : POST https://cloud.appscan.com/api/v4/FileUpload
 #     headers: "Authorization=Bearer <token>"
 #     params: "uploadedFile=<filePath>"
-def upload_file(token, file_to_upload, host=HOST, timeout=60, retries=2):
+def upload_file(token, file_to_upload, host=None, timeout=60, retries=2):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/FileUpload")
     headers = {"Authorization": "Bearer " + token, "Accept": "text/plain"}
     json_response = ""
@@ -435,7 +458,8 @@ def upload_file(token, file_to_upload, host=HOST, timeout=60, retries=2):
 # request URL : PUT https://cloud.appscan.com/api/v4/Scans/UpdateIastScan/{scanId}
 #     headers: "Authorization=Bearer <token>"
 #     params: "scanId=<scanId>, scanData=<scanData>"
-def update_iast_scan(scan_id, token, file_id, host=HOST, retries=0):
+def update_iast_scan(scan_id, token, file_id, host=None, retries=0):
+    host = get_host(host)
     scan_model = {
         "ConfigFileId": file_id
     }
@@ -467,7 +491,8 @@ def update_iast_scan(scan_id, token, file_id, host=HOST, retries=0):
 #         "IsTrialReport": True,
 #         "ReportFileType": Xml
 #     }
-def create_report(scan_id, token, host=HOST, scope="Scan"):
+def create_report(scan_id, token, host=None, scope="Scan"):
+    host = get_host(host)
     # url
     # scope is one of: Application/Scan/ScanExecution (ScanExecution not supported)
     url = url_join(host, ASOC_HOST, "/Reports/Security/", scope, scan_id)
@@ -508,7 +533,8 @@ def create_report(scan_id, token, host=HOST, scope="Scan"):
 # request URL : GET https://cloud.appscan.com/api/V4/Reports
 #     headers: "Authorization=Bearer <token>"
 #     params: "$filter: Id eq <reportId>"
-def get_report_status(report_id, token, host=HOST):
+def get_report_status(report_id, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Reports")
     headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
     params = {"$filter": f"Id eq {report_id}"}
@@ -530,7 +556,7 @@ def get_report_status(report_id, token, host=HOST):
 
 
 # polls asoc until report is ready
-def wait_for_report_ready(report_id, token, max_retries=100, host=HOST):
+def wait_for_report_ready(report_id, token, max_retries=100, host=None):
     counter = max_retries
     while counter > 0:
         report_status = get_report_status(report_id=report_id, token=token, host=host)
@@ -547,7 +573,8 @@ def wait_for_report_ready(report_id, token, max_retries=100, host=HOST):
 # request URL : GET https://cloud.appscan.com/api/V4/Reports/<report_id>/Download
 #     headers: "Authorization=Bearer <token>"
 #     params: "id=<reportId>"
-def download_report(report_id, token, host=HOST):
+def download_report(report_id, token, host=None):
+    host = get_host(host)
     url = url_join(host, ASOC_HOST, "/Reports/", report_id, "/Download")
     headers = {"Authorization": "Bearer " + token, "Accept": "text/plain"}
     try:
