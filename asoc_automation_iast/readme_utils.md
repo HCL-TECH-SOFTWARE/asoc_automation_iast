@@ -1,6 +1,6 @@
 # AsocReportUtils.py
 
-This module provides utility functions for interacting with the AppScan on Cloud (ASoC) API, specifically for retrieving scan issues, issue details, and application information.
+This module provides utility functions for interacting with the AppScan on Cloud (ASoC) API and AS360 API, specifically for retrieving scan issues, issue details, and application information.
 
 ## Features
 
@@ -22,7 +22,7 @@ from asoc_automation_iast.AsocReportUtils import (
 )
 ```
 
-Each function requires authentication (`token`) and the ASoC API `host` URL.
+Each function requires authentication (`token`) and the API `host` URL.
 
 ## Example
 
@@ -40,7 +40,7 @@ Exceptions from the `requests` library are caught and handled. Custom exceptions
 
 # AsocUtils.py
 
-This module contains utility functions for managing applications, scans, agents, and reports in AppScan on Cloud (ASoC) via its REST API.
+This module contains utility functions for managing applications, scans, agents, and reports in AppScan on Cloud (ASoC) and AS360 via its REST API.
 
 ## Features
 

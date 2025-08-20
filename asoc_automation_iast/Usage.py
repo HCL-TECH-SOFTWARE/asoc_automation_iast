@@ -36,7 +36,7 @@ input_options = {
         "will be used. If an existing application is provided, this value is ignored.",
         "optional"),
     "host": (
-        "ASoC host url. If not specified, the default value will be ASoc US.",
+        "host url. If not specified, the default value will be ASoc North America.",
         "optional")
 }
 
