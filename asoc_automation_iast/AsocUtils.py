@@ -12,6 +12,7 @@ import inspect
 import json
 import logging
 import time
+from urllib.parse import urlparse
 
 import requests
 
@@ -33,10 +34,10 @@ def url_join(*arguments):
 def get_host(host):
     # Use default HOST if None
     host = host if host is not None else HOST
-    # Remove '/TEST/' or '/api/v4' if present
-    host = host.replace('IAST/', '')
-    host = host.replace('api/v4', '')
-    return host
+    # Remove '/IAST/' or '/api/v4' or 'api' etc. if present in host url
+    parsed = urlparse(host)
+    base_url = f"{parsed.scheme}://{parsed.netloc}/"
+    return base_url
 
 # start new execution directly from ASoC IAST interface
 # request URL : POST https://cloud.appscan.com/IAST/api/StartNewExecution
